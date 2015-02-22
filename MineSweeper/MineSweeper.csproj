@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C5BFAA57-C2A9-49B2-A638-838F960A8DEE}</ProjectGuid>
+    <ProjectGuid>{910FD75B-F062-4307-87D6-58600F32C0BE}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MineSweeper</RootNamespace>
@@ -50,8 +50,12 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="MinesBoard.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -60,6 +64,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -73,6 +78,27 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\num1.png" />
+    <None Include="Resources\num2.png" />
+    <None Include="Resources\num3.png" />
+    <None Include="Resources\num4.png" />
+    <None Include="Resources\num5.png" />
+    <None Include="Resources\num6.png" />
+    <None Include="Resources\num7.png" />
+    <None Include="Resources\num8.png" />
+    <None Include="Resources\mine.png" />
+    <None Include="Resources\mine_exploded.png" />
+    <None Include="Resources\covered.png" />
+    <None Include="Resources\covered_press.png" />
+    <None Include="Resources\covered_moveon.png" />
+    <None Include="Resources\flag.png" />
+    <None Include="Resources\flag_moveon.png" />
+    <None Include="Resources\flag_missed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\empty.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

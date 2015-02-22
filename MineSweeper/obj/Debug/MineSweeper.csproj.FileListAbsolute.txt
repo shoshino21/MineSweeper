@@ -1,1 +1,9 @@
 F:\@Documents\!!GoogleCloud\Dropbox\@Coding\!GitHub\MineSweeper\MineSweeper\bin\Debug\MineSweeper.exe.config
+F:\@Documents\!!GoogleCloud\Dropbox\@Coding\!GitHub\MineSweeper\MineSweeper\bin\Debug\MineSweeper.exe
+F:\@Documents\!!GoogleCloud\Dropbox\@Coding\!GitHub\MineSweeper\MineSweeper\bin\Debug\MineSweeper.pdb
+F:\@Documents\!!GoogleCloud\Dropbox\@Coding\!GitHub\MineSweeper\MineSweeper\obj\Debug\MineSweeper.csprojResolveAssemblyReference.cache
+F:\@Documents\!!GoogleCloud\Dropbox\@Coding\!GitHub\MineSweeper\MineSweeper\obj\Debug\MineSweeper.Form1.resources
+F:\@Documents\!!GoogleCloud\Dropbox\@Coding\!GitHub\MineSweeper\MineSweeper\obj\Debug\MineSweeper.Properties.Resources.resources
+F:\@Documents\!!GoogleCloud\Dropbox\@Coding\!GitHub\MineSweeper\MineSweeper\obj\Debug\MineSweeper.csproj.GenerateResource.Cache
+F:\@Documents\!!GoogleCloud\Dropbox\@Coding\!GitHub\MineSweeper\MineSweeper\obj\Debug\MineSweeper.exe
+F:\@Documents\!!GoogleCloud\Dropbox\@Coding\!GitHub\MineSweeper\MineSweeper\obj\Debug\MineSweeper.pdb
