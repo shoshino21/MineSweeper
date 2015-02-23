@@ -15,25 +15,12 @@ namespace MineSweeper {
         public int BoardHeight { get; private set; }        //盤面高度
         public int NumMines { get; private set; }           //地雷數量
 
-        /*/ 設property setter條件不知為何在constructor無效？ /*/
-        ////地雷數量
-        //private int numMines;
-        //public int NumMines {
-        //    get { return numMines; }
-        //    set {
-        //        if (numMines > BoardWidth * BoardHeight) {
-        //            numMines = BoardWidth * BoardHeight;
-        //        } else {
-        //            numMines = value;
-        //        }
-        //    }
-        //}
-
         public MinesBoard(int width, int height, int numMines) {
             this.BoardWidth = width;
             this.BoardHeight = height;
 
             //地雷數不可大於總格數
+            /*/不知為何用Property設setter對constructor無效，只好放這/*/
             if (numMines > BoardWidth * BoardHeight) {
                 this.NumMines = BoardWidth * BoardHeight;
             } else {
@@ -43,13 +30,7 @@ namespace MineSweeper {
             this.Mines = SetMines();
             this.IsOpened = new bool[height, width];
             this.IsFlagged = new bool[height, width];
-            this.AroundCount = new int[height, width];
-
-            for (int h = 0; h < height; h++) {
-                for (int w = 0; w < width; w++) {
-                    AroundCount[h, w] = CalcAroundCount(h, w);
-                }
-            }
+            this.AroundCount = CalcAroundCount();
         }
 
         //隨機配置地雷
@@ -70,23 +51,37 @@ namespace MineSweeper {
             return board;
         }
 
-        //計算方塊周圍地雷數
-        private int CalcAroundCount(int h, int w) {
-            int count = 0;
-
-            for (int hh = h - 1; hh <= h + 1; hh++) {
-                for (int ww = w - 1; ww <= w + 1; ww++) {
-                    bool isSelf = (hh == h && ww == w);    //是否為目標方塊本身
-
-                    if (IsInbound(hh, ww) && !(isSelf)) {
-                        if (Mines[hh, ww]) { count++; }
-                    }
+        //繞行所有方塊用
+        private void ForEachCell(Action<int, int> action) {
+            for (int h = 0; h < BoardHeight; h++) {
+                for (int w = 0; w < BoardWidth; w++) {
+                    action(h, w);
                 }
             }
-            return count;
         }
 
-        //回傳是否在盤面範圍以內
+        //計算方塊周圍地雷數
+        private int[,] CalcAroundCount() {
+            int[,] results = new int[BoardHeight, BoardWidth];
+
+            ForEachCell((h, w) => {
+                int count = 0;
+
+                for (int hh = h - 1; hh <= h + 1; hh++) {
+                    for (int ww = w - 1; ww <= w + 1; ww++) {
+                        bool isSelf = (hh == h && ww == w);    //是否為目標方塊本身
+
+                        if (IsInbound(hh, ww) && !(isSelf)) {
+                            if (Mines[hh, ww]) { count++; }
+                        }
+                    }
+                }
+                results[h, w] = count;
+            });
+            return results;
+        }
+
+        //判斷是否在盤面範圍以內
         private bool IsInbound(int h, int w) {
             return (h >= 0 && h < BoardHeight && w >= 0 && w < BoardWidth);
         }
