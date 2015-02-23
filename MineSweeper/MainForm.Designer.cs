@@ -1,5 +1,5 @@
 ﻿namespace MineSweeper {
-    partial class Form1 {
+    partial class MainForm {
         /// <summary>
         /// 設計工具所需的變數。
         /// </summary>
@@ -23,23 +23,14 @@
         /// 修改這個方法的內容。
         /// </summary>
         private void InitializeComponent() {
-            this.panel1 = new System.Windows.Forms.Panel();
             this.SuspendLayout();
             // 
-            // panel1
-            // 
-            this.panel1.Location = new System.Drawing.Point(20, 30);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(590, 322);
-            this.panel1.TabIndex = 0;
-            // 
-            // Form1
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(635, 402);
-            this.Controls.Add(this.panel1);
-            this.Name = "Form1";
+            this.Name = "MainForm";
             this.Text = "Form1";
             this.ResumeLayout(false);
 
@@ -47,7 +38,8 @@
 
         #endregion
 
-        private System.Windows.Forms.Panel panel1;
+
+
     }
 }
 
