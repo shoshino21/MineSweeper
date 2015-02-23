@@ -16,7 +16,7 @@ namespace MineSweeper {
         /*/ 注意地雷數不能比格子數多 /*/
         int boardWidth = 10;
         int boardHeight = 8;
-        int numMines = 15;
+        int numMines = 10;
 
         public Form1() {
             InitializeComponent();
