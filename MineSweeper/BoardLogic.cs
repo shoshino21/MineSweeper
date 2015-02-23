@@ -8,7 +8,7 @@ namespace MineSweeper {
     class BoardLogic {
         public bool[,] Mines { get; private set; }          //地雷配置
         public bool[,] IsOpened { get; private set; }       //是否打開
-        public bool[,] IsFlagged { get; private set; }      //是否插旗
+        public bool[,] IsFlagged { get; set; }      //是否插旗
         public int[,] AroundCount { get; private set; }     //周圍地雷數
 
         public int Width { get; private set; }              //盤面寬度
