@@ -94,7 +94,6 @@
     <None Include="Resources\mine.png" />
     <None Include="Resources\mine_exploded.png" />
     <None Include="Resources\covered.png" />
-    <None Include="Resources\covered_press.png" />
     <None Include="Resources\covered_moveon.png" />
     <None Include="Resources\flag.png" />
     <None Include="Resources\flag_moveon.png" />

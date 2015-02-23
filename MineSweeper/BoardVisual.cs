@@ -15,18 +15,17 @@ namespace MineSweeper {
         //private Panel _panel;
         private PictureBox[,] _pic;
 
-        public BoardVisual(int width, int height, int numMines, Form form) {
-            //public BoardVisual(Panel panel, int width, int height, int numMines) {
-            //this._panel = panel;
+        public BoardVisual(int width, int height, int numMines, int locX, int locY, Form form) {
             _boardLogic = new BoardLogic(width, height, numMines);
             _pic = new PictureBox[_boardLogic.Height, _boardLogic.Width];
-            Size = new Size(_boardLogic.Width * CELL_SIZE, _boardLogic.Height * CELL_SIZE);
+            //Size = new Size(_boardLogic.Width * CELL_SIZE, _boardLogic.Height * CELL_SIZE);
+            //Location = new Point(locX, locY);
 
             //對所有方塊設定屬性
             _boardLogic.ForEachCell((h, w) => {
                 _pic[h, w] = new PictureBox();
                 _pic[h, w].Image = Properties.Resources.covered;
-                _pic[h, w].Location = new Point(w * CELL_SIZE, h * CELL_SIZE);
+                _pic[h, w].Location = new Point(w * CELL_SIZE + locX, h * CELL_SIZE + locY);
                 _pic[h, w].Size = new Size(CELL_SIZE, CELL_SIZE);
                 _pic[h, w].Parent = form;
 
@@ -63,6 +62,7 @@ namespace MineSweeper {
                     if (isFlagged) { return; }  //有插旗則左鍵無效
 
                     if (isMines) {
+                        //踩到地雷
                         currPic.Image = Properties.Resources.mine;
                     } else {
                         //顯示方塊周圍地雷數
@@ -94,14 +94,14 @@ namespace MineSweeper {
                 }
             };
 
-            //滑鼠按下時顯示按下圖樣
-            pic.MouseDown += (o, e) => {
-                bool isOpened = _boardLogic.IsOpened[h, w];
-                bool isFlagged = _boardLogic.IsFlagged[h, w];
+            ////滑鼠按下時顯示按下圖樣
+            //pic.MouseDown += (o, e) => {
+            //    bool isOpened = _boardLogic.IsOpened[h, w];
+            //    bool isFlagged = _boardLogic.IsFlagged[h, w];
 
-                if (isOpened || isFlagged || e.Button == MouseButtons.Right) { return; }  //已開啟or插旗則無效
-                (o as PictureBox).Image = Properties.Resources.covered_press;
-            };
+            //    if (isOpened || isFlagged || e.Button == MouseButtons.Right) { return; }  //已開啟or插旗則無效
+            //    (o as PictureBox).Image = Properties.Resources.covered_press;
+            //};
 
             //滑鼠移至未開啟方塊上時變色
             pic.MouseMove += (o, e) => {
@@ -144,16 +144,16 @@ namespace MineSweeper {
         //}
 
         ////
-        private void Pic_MouseUp(object sender, MouseEventArgs e) {
-            //MessageBox.Show(e.X.ToString());
-            //MessageBox.Show(e.Y.ToString());
-            //if (sender is PictureBox) {
+        //private void Pic_MouseUp(object sender, MouseEventArgs e) {
+        //    //MessageBox.Show(e.X.ToString());
+        //    //MessageBox.Show(e.Y.ToString());
+        //    //if (sender is PictureBox) {
 
-            PictureBox pic = sender as PictureBox;
-            if (e.Button == MouseButtons.Left) {
-                pic.Image = Properties.Resources.empty;
-            }
+        //    PictureBox pic = sender as PictureBox;
+        //    if (e.Button == MouseButtons.Left) {
+        //        pic.Image = Properties.Resources.empty;
+        //    }
 
-        }
+        //}
     }
 }
