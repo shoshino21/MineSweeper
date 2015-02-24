@@ -31,6 +31,7 @@ namespace MineSweeper {
 
                 SetMouseEvent(_pic[h, w], h, w);
 
+
                 //滑鼠移至未開啟方塊上時變色
                 //_pic[h, w].MouseMove += (o, e) => {
                 //    bool cellIsOpened = _boardLogic.IsOpened[h, w];
@@ -61,6 +62,10 @@ namespace MineSweeper {
                 if (e.Button == MouseButtons.Left) {
                     if (isFlagged) { return; }  //有插旗則左鍵無效
 
+                    if (_boardLogic.OpenCell(h, w)) {
+                        RedrawEachCell();
+                    }
+
                     if (isMines) {
                         //踩到地雷
                         currPic.Image = Properties.Resources.mine;
@@ -79,18 +84,21 @@ namespace MineSweeper {
                             default: break;
                         }
                     }
-                    _boardLogic.IsOpened[h, w] = true;  /*/之後改boardLogic處理/*/
+                    //_boardLogic.IsOpened[h, w] = true;  /*/之後改boardLogic處理/*/
 
                 } else if (e.Button == MouseButtons.Right) {
                     if (isOpened) { return; }    //已打開則右鍵無效
 
+                    _boardLogic.SwitchFlag(h, w);    //切換旗號
+                    isFlagged = _boardLogic.IsFlagged[h, w];
+
                     if (isFlagged) {
-                        currPic.Image = Properties.Resources.covered;
-                        _boardLogic.IsFlagged[h, w] = false;    /*/之後改boardLogic處理/*/
-                    } else {
                         currPic.Image = Properties.Resources.flag;
-                        _boardLogic.IsFlagged[h, w] = true;
+                    } else {
+                        currPic.Image = Properties.Resources.covered;
                     }
+
+                    _boardLogic.CheckWinning();     //檢查玩家是否勝利
                 }
             };
 
@@ -128,7 +136,45 @@ namespace MineSweeper {
                     (o as PictureBox).Image = Properties.Resources.covered;
                 }
             };
+        }
 
+        private void RedrawEachCell() {
+            _boardLogic.ForEachCell((h, w) => {
+                bool isMines = _boardLogic.Mines[h, w];
+                bool isOpened = _boardLogic.IsOpened[h, w];
+                bool isFlagged = _boardLogic.IsFlagged[h, w];
+                int aroundCount = _boardLogic.AroundCount[h, w];
+                
+                var img = Properties.Resources.covered;
+
+                if (isOpened) {
+                    if (isMines) {
+                        //踩到地雷
+                        img = Properties.Resources.mine;
+                    } else {
+                        //顯示方塊周圍地雷數
+                        switch (aroundCount) {
+                            case 0: img = Properties.Resources.empty; break;
+                            case 1: img = Properties.Resources.num1; break;
+                            case 2: img = Properties.Resources.num2; break;
+                            case 3: img = Properties.Resources.num3; break;
+                            case 4: img = Properties.Resources.num4; break;
+                            case 5: img = Properties.Resources.num5; break;
+                            case 6: img = Properties.Resources.num6; break;
+                            case 7: img = Properties.Resources.num7; break;
+                            case 8: img = Properties.Resources.num8; break;
+                            default: break;
+                        }
+                    }
+                } else {
+                    if (isFlagged) {
+                        img = Properties.Resources.flag;
+                    } else {
+                        img = Properties.Resources.covered;
+                    }
+                }
+                _pic[h, w].Image = img;
+            });
         }
 
         //private void Pic_MouseMove(object sender, EventArgs e) {

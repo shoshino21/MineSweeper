@@ -59,12 +59,58 @@ namespace MineSweeper {
                 int count = 0;
                 //繞行該方塊周圍所有方塊並計算地雷數
                 ForEachAroundCell(h, w, (ah, aw) => {
-                    if (Mines[ah, aw]) { count++; }
+                    if (Mines[ah, aw]) {
+                        count++;
+                    }
                 });
                 results[h, w] = count;
             });
             return results;
         }
+
+        //點開方塊
+        //public void OpenCell(int h, int w) {
+        public bool OpenCell(int h, int w) {
+            if (IsOpened[h, w]) { return false; }
+
+            if (Mines[h, w]) {  //踩到地雷
+                // TODO Exploded
+                return false;
+            } else {
+                IsOpened[h, w] = true;
+
+                if (AroundCount[h, w] == 0) {   //若周圍沒地雷就開啟周圍所有方塊
+                    OpenCellContinued(h, w);
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        private void OpenCellContinued(int h, int w) {
+            ForEachAroundCell(h, w, (ah, aw) => {
+                if (!IsOpened[ah, aw] && !IsFlagged[ah, aw]) {
+                    IsOpened[ah, aw] = true;
+
+                    if (AroundCount[ah, aw] == 0) {
+                        OpenCellContinued(ah, aw);
+                    }
+                }
+            });
+        }
+
+        //切換旗號
+        public void SwitchFlag(int h, int w) {
+            if (!IsOpened[h, w]) {
+                IsFlagged[h, w] = !IsFlagged[h, w];
+            }
+        }
+
+        //檢查玩家是否勝利
+        public void CheckWinning() {
+
+        }
+
 
         #region HelperMethod
         //繞行所有方塊
