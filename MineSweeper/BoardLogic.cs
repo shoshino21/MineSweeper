@@ -1,4 +1,16 @@
-﻿using System;
+﻿/* TODO:
+ * 踩到地雷時該地雷要標示 (標示哪一顆由Visual側作就好)
+ * Logic這邊只要回傳IsExploded就好...?
+ * 
+ * 插錯的flag也要標示 (ForEachCell -> 找!Mines && IsFlagged -> 顯示插錯)
+ * 這個也只是純顯示所以在Visual作就好
+ * 
+ * GameOver Message方法應該寫在form?
+ * 
+ * 記得不時回去翻一下specification
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +26,7 @@ namespace MineSweeper {
         public int Width { get; private set; }              //盤面寬度
         public int Height { get; private set; }             //盤面高度
         public int NumMines { get; private set; }           //地雷數量
+        //public int IsExploded
 
         public BoardLogic(int width, int height, int numMines) {
             this.Width = width;
@@ -52,7 +65,7 @@ namespace MineSweeper {
 
         //計算方塊周圍地雷數
         private int[,] CalcAroundCount() {
-            int[,] results = new int[Height, Width];
+            int[,] aroundCountArr = new int[Height, Width];
 
             //繞行各個方塊
             ForEachCell((h, w) => {
@@ -63,30 +76,29 @@ namespace MineSweeper {
                         count++;
                     }
                 });
-                results[h, w] = count;
+                aroundCountArr[h, w] = count;
             });
-            return results;
+            return aroundCountArr;
         }
 
         //點開方塊
-        //public void OpenCell(int h, int w) {
-        public bool OpenCell(int h, int w) {
-            if (IsOpened[h, w]) { return false; }
+        public void OpenCell(int h, int w) {
+            if (IsOpened[h, w]) { return; }
+            if (IsFlagged[h, w]) { return; }
 
             if (Mines[h, w]) {  //踩到地雷
+                IsOpened[h, w] = true;
                 // TODO Exploded
-                return false;
             } else {
                 IsOpened[h, w] = true;
 
-                if (AroundCount[h, w] == 0) {   //若周圍沒地雷就開啟周圍所有方塊
+                if (AroundCount[h, w] == 0) {   //周圍沒地雷則開啟周圍所有方塊
                     OpenCellContinued(h, w);
-                    return true;
                 }
-                return false;
             }
         }
 
+        //連續開啟方塊
         private void OpenCellContinued(int h, int w) {
             ForEachAroundCell(h, w, (ah, aw) => {
                 if (!IsOpened[ah, aw] && !IsFlagged[ah, aw]) {
@@ -107,8 +119,23 @@ namespace MineSweeper {
         }
 
         //檢查玩家是否勝利
-        public void CheckWinning() {
+        public bool CheckForWinning() {
+            bool isWinning = true;
 
+            ForEachCell((h, w) => {
+                bool minesNotFlagged = (Mines[h, w] && !IsFlagged[h, w]);
+                bool safeCellNotOpened = (!Mines[h, w] && !IsOpened[h, w]);
+
+                if (minesNotFlagged || safeCellNotOpened) {
+                    isWinning = false;
+                }
+            });
+            return isWinning;
+        }
+
+        //踩到地雷
+        public bool Exploded() { 
+            return 
         }
 
 
@@ -131,7 +158,7 @@ namespace MineSweeper {
                     //是否為目標方塊本身
                     bool isSelf = (hh == h && ww == w);
 
-                    if (isInbound && !isSelf) {
+                    if (isInbound && !isSelf) 
                         action(hh, ww);
                     }
                 }
