@@ -1,16 +1,4 @@
-﻿/* TODO:
- * 踩到地雷時該地雷要標示 (標示哪一顆由Visual側作就好)
- * Logic這邊只要回傳IsExploded就好...?
- * 
- * 插錯的flag也要標示 (ForEachCell -> 找!Mines && IsFlagged -> 顯示插錯)
- * 這個也只是純顯示所以在Visual作就好
- * 
- * GameOver Message方法應該寫在form?
- * 
- * 記得不時回去翻一下specification
- */
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,11 +14,12 @@ namespace MineSweeper {
         public int Width { get; private set; }              //盤面寬度
         public int Height { get; private set; }             //盤面高度
         public int NumMines { get; private set; }           //地雷數量
-        //public int IsExploded
+        public bool IsExploded { get; private set; }        //是否GameOver
 
         public BoardLogic(int width, int height, int numMines) {
             this.Width = width;
             this.Height = height;
+            this.IsExploded = false;
 
             //地雷數不可大於總格數
             if (numMines > Width * Height) {
@@ -72,9 +61,7 @@ namespace MineSweeper {
                 int count = 0;
                 //繞行該方塊周圍所有方塊並計算地雷數
                 ForEachAroundCell(h, w, (ah, aw) => {
-                    if (Mines[ah, aw]) {
-                        count++;
-                    }
+                    if (Mines[ah, aw]) { count++; }
                 });
                 aroundCountArr[h, w] = count;
             });
@@ -88,7 +75,7 @@ namespace MineSweeper {
 
             if (Mines[h, w]) {  //踩到地雷
                 IsOpened[h, w] = true;
-                // TODO Exploded
+                IsExploded = true;
             } else {
                 IsOpened[h, w] = true;
 
@@ -111,7 +98,7 @@ namespace MineSweeper {
             });
         }
 
-        //切換旗號
+        //切換旗子
         public void SwitchFlag(int h, int w) {
             if (!IsOpened[h, w]) {
                 IsFlagged[h, w] = !IsFlagged[h, w];
@@ -126,18 +113,10 @@ namespace MineSweeper {
                 bool minesNotFlagged = (Mines[h, w] && !IsFlagged[h, w]);
                 bool safeCellNotOpened = (!Mines[h, w] && !IsOpened[h, w]);
 
-                if (minesNotFlagged || safeCellNotOpened) {
-                    isWinning = false;
-                }
+                if (minesNotFlagged || safeCellNotOpened) { isWinning = false; }
             });
             return isWinning;
         }
-
-        //踩到地雷
-        public bool Exploded() { 
-            return 
-        }
-
 
         #region HelperMethod
         //繞行所有方塊
@@ -158,9 +137,8 @@ namespace MineSweeper {
                     //是否為目標方塊本身
                     bool isSelf = (hh == h && ww == w);
 
-                    if (isInbound && !isSelf) 
+                    if (isInbound && !isSelf)
                         action(hh, ww);
-                    }
                 }
             }
         }

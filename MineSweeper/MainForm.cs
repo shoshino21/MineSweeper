@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-/*/ 就只是個踩地雷 by shoshino21 2015.2.24 /*/
+/*/ 就只是個踩地雷 by shoshino21 2015.2.27 /*/
 
 namespace MineSweeper {
     public partial class MainForm : Form {
@@ -27,7 +27,6 @@ namespace MineSweeper {
             InitializeComponent();
 
             _boardVisual = new BoardVisual(boardWidth, boardHeight, numMines, LOCATION_X, LOCATION_Y, this);
-
         }
     }
 }

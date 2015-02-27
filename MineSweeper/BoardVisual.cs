@@ -8,7 +8,7 @@ using System.Drawing;
 
 namespace MineSweeper {
     class BoardVisual : UserControl {
-        private const int CELL_SIZE = 30;       //方塊大小
+        private const int CELL_SIZE = 30;       //方塊大小，配合圖片大小所以不能亂改
         private BoardLogic _boardLogic;
         private PictureBox[,] _pic;
 
@@ -23,7 +23,7 @@ namespace MineSweeper {
                 _pic[h, w].Location = new Point(w * CELL_SIZE + locX, h * CELL_SIZE + locY);
                 _pic[h, w].Size = new Size(CELL_SIZE, CELL_SIZE);
                 _pic[h, w].Parent = form;
-                
+
                 SetMouseEvent(_pic[h, w], h, w);
             });
         }
@@ -34,11 +34,21 @@ namespace MineSweeper {
             pic.MouseUp += (o, e) => {
                 if (e.Button == MouseButtons.Left) {
                     _boardLogic.OpenCell(h, w);     //打開方塊
+
+                    if (_boardLogic.IsExploded) {   //踩到地雷
+                        Exploded(h, w);
+                        return;
+                    }
+
                 } else if (e.Button == MouseButtons.Right) {
                     _boardLogic.SwitchFlag(h, w);   //切換旗號
                 }
+
                 RedrawEachCell();   //重繪盤面
-                _boardLogic.CheckForWinning();     //檢查玩家是否勝利
+
+                if (_boardLogic.CheckForWinning()) {    //檢查玩家是否勝利
+                    Winning();
+                }
             };
 
             //滑鼠移至未開啟方塊上時變色
@@ -76,10 +86,11 @@ namespace MineSweeper {
                 bool isOpened = _boardLogic.IsOpened[h, w];
                 bool isFlagged = _boardLogic.IsFlagged[h, w];
                 int aroundCount = _boardLogic.AroundCount[h, w];
+                bool isExploded = _boardLogic.IsExploded;
 
                 if (isOpened) {
                     if (isMines) {
-                        newImg = Properties.Resources.mine;
+                        newImg = Properties.Resources.mine_exploded;
                     } else {
                         switch (aroundCount) {
                             case 0: newImg = Properties.Resources.empty; break;
@@ -102,9 +113,47 @@ namespace MineSweeper {
                         newImg = Properties.Resources.covered;
                     }
                 }
-                
+
                 _pic[h, w].Image = newImg;
             });
+        }
+
+        //踩到地雷，參數 = 座標
+        private void Exploded(int explodedX, int explodedY) {
+            _boardLogic.ForEachCell((h, w) => {
+                //標示踩到的地雷
+                if (h == explodedX && w == explodedY) {
+                    _pic[h, w].Image = Properties.Resources.mine_exploded;
+                }
+
+                //標示插錯的旗子
+                bool isMissFlag = (!_boardLogic.Mines[h, w] && _boardLogic.IsFlagged[h, w]);
+                if (isMissFlag) {
+                    _pic[h, w].Image = Properties.Resources.flag_missed;
+                }
+
+                _pic[h, w].Enabled = false;
+            });
+
+            //挑釁 m9(^o^)
+            string suckMessage = string.Empty;
+            switch (new Random().Next(5)) {
+                case 0: suckMessage = "Booooooooom!!"; break;
+                case 1: suckMessage = "You noob LOL"; break;
+                case 2: suckMessage = "HAHA UCCU"; break;
+                case 3: suckMessage = @"/(^o^)\ WTF!?"; break;
+                case 4: suckMessage = @"\(^o^)/ WRYYYYY"; break;
+                default: break;
+            }
+            MessageBox.Show(suckMessage);
+        }
+
+        //玩家勝利
+        private void Winning() {
+            _boardLogic.ForEachCell((h, w) => {
+                _pic[h, w].Enabled = false;
+            });
+            MessageBox.Show("You Win!");
         }
     }
 }
