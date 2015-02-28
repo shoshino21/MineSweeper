@@ -28,6 +28,26 @@ namespace MineSweeper {
         }
 
         public BoardLogic(int width, int height, int numMines) {
+            //this.Width = width;
+            //this.Height = height;
+            //this.IsExploded = false;
+
+            ////地雷數不可大於總格數
+            //if (numMines > Width * Height) {
+            //    this.NumMines = Width * Height;
+            //} else {
+            //    this.NumMines = numMines;
+            //}
+
+            CreateBoard(width, height, numMines);
+            //this.Mines = SetMines();
+            //this.IsOpened = new bool[height, width];
+            //this.IsFlagged = new bool[height, width];
+            //this.AroundCount = CalcAroundCount();
+        }
+
+        //建立盤面
+        public void CreateBoard(int width, int height, int numMines) {
             this.Width = width;
             this.Height = height;
             this.IsExploded = false;
@@ -40,8 +60,8 @@ namespace MineSweeper {
             }
 
             this.Mines = SetMines();
-            this.IsOpened = new bool[height, width];
-            this.IsFlagged = new bool[height, width];
+            this.IsOpened = new bool[Height, Width];
+            this.IsFlagged = new bool[Height, Width];
             this.AroundCount = CalcAroundCount();
         }
 
@@ -115,7 +135,7 @@ namespace MineSweeper {
 
             bool isNotEnoughToFlag = (RemainingFlagCount == 0 && !IsFlagged[h, w]);
             if (isNotEnoughToFlag) {
-                MessageBox.Show("You have no flag!");
+                MessageBox.Show("You have no flag!","WHAT!?",MessageBoxButtons.OK,MessageBoxIcon.Warning);
             } else {
                 IsFlagged[h, w] = !IsFlagged[h, w];
             }
@@ -133,6 +153,10 @@ namespace MineSweeper {
             });
             return isWinning;
         }
+
+        //public void ResetBoard(int width, int height, int numMines) {
+        //    CreateBoard(width, height, numMines);
+        //}
 
         #region HelperMethod
         //繞行所有方塊

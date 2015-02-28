@@ -8,10 +8,10 @@ using System.Drawing;
 
 namespace MineSweeper {
     class BoardVisual {
-        private const int CELL_SIZE = 30;       //方塊大小，配合圖片大小所以不可亂改
         private BoardLogic _boardLogic;
         private PictureBox[,] _pic;
 
+        public const int CELL_SIZE = 30;    //方塊大小，配合圖片大小所以不可亂改
         public Label lblRemaining;          //標記剩餘地雷數
         public Label lblTimer;              //標記時間
         public Timer timerPlaying;          //計時
@@ -54,7 +54,10 @@ namespace MineSweeper {
                 //重繪盤面
                 RedrawForm();
                 //檢查玩家是否勝利
-                if (_boardLogic.CheckForWinning()) { Winning(); }
+                if (_boardLogic.CheckForWinning()) {
+                    Winning();
+                    return;
+                }
                 //打開第一顆方塊時啟動Timer
                 if (!isPlaying) {
                     isPlaying = true;
@@ -128,6 +131,7 @@ namespace MineSweeper {
                 _pic[h, w].Image = newImg;
             });
 
+            //更新Counter
             lblRemaining.Text = _boardLogic.RemainingFlagCount.ToString();
         }
 
@@ -170,11 +174,15 @@ namespace MineSweeper {
         private void Winning() {
             isPlaying = false;
             timerPlaying.Enabled = false;
-
-            _boardLogic.ForEachCell((h, w) => {
-                _pic[h, w].Enabled = false;
-            });
+            _boardLogic.ForEachCell((h, w) => { _pic[h, w].Enabled = false; });
             MessageBox.Show("You Win!");
+        }
+
+        //重置遊戲
+        public void ResetGame(int width, int height, int numMines) {
+            _boardLogic.CreateBoard(width, height, numMines);
+            RedrawForm();
+            _boardLogic.ForEachCell((h, w) => { _pic[h, w].Enabled = true; });
         }
     }
 }
