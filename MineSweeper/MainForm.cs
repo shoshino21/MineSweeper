@@ -9,8 +9,8 @@ namespace MineSweeper {
         private BoardVisual _boardVisual;
 
         /*/ 注意地雷數不能比格子數多 /*/
-        int boardWidth = 20;
-        int boardHeight = 8;
+        int boardWidth = 10;
+        int boardHeight = 10;
         int numMines = 1;
 
         //遊戲盤面座標
@@ -25,9 +25,9 @@ namespace MineSweeper {
 
             _boardVisual = new BoardVisual(boardWidth, boardHeight, numMines, LOCATION_X, LOCATION_Y, this);
 
-            _boardVisual.lblRemaining = this.lblRemaining;
-            _boardVisual.lblTimer = this.lblTimer;
-            _boardVisual.timerPlaying = this.timerPlaying;
+            _boardVisual.LabelRemaining = this.lblRemaining;
+            _boardVisual.LabelTimer = this.lblTimer;
+            _boardVisual.TimerPlaying = this.timerPlaying;
 
             InitializeGame();
         }
@@ -67,12 +67,13 @@ namespace MineSweeper {
                 if (result == DialogResult.No) { return; }
             }
             _boardVisual.ResetGame(boardWidth, boardHeight, numMines);
+            //_boardVisual = new BoardVisual(boardWidth, boardHeight, numMines, LOCATION_X, LOCATION_Y, this);
             InitializeGame();
         }
 
         private void optionToolStripMenuItem_Click(object sender, EventArgs e) {
-            boardWidth = 20;
-            boardHeight = 20;
+            boardWidth = 5;
+            boardHeight = 5;
         }
 
         //離開遊戲

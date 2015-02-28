@@ -12,14 +12,40 @@ namespace MineSweeper {
         private PictureBox[,] _pic;
 
         public const int CELL_SIZE = 30;    //方塊大小，配合圖片大小所以不可亂改
-        public Label lblRemaining;          //標記剩餘地雷數
-        public Label lblTimer;              //標記時間
-        public Timer timerPlaying;          //計時
+        public Form MainForm { get; set; }
+        public Label LabelRemaining { get; set; }          //標記剩餘地雷數
+        public Label LabelTimer { get; set; }              //標記時間
+        public Timer TimerPlaying { get; set; }          //計時
 
         public bool isPlaying { get; private set; }         //遊戲是否在進行中
+        public int BoardOffsetX { get; set; }
+        public int BoardOffsetY { get; set; }
 
-        public BoardVisual(int width, int height, int numMines, int locX, int locY, Form form) {
+        public BoardVisual(int width, int height, int numMines, int offsetX, int offsetY, Form form) {
+            //_boardLogic = new BoardLogic(width, height, numMines);
+            //_pic = new PictureBox[_boardLogic.Height, _boardLogic.Width];
+            //isPlaying = false;
+
+            ////設定所有方塊屬性
+            //_boardLogic.ForEachCell((h, w) => {
+            //    _pic[h, w] = new PictureBox();
+            //    _pic[h, w].Image = Properties.Resources.covered;
+            //    _pic[h, w].Location = new Point(w * CELL_SIZE + locX, h * CELL_SIZE + locY);
+            //    _pic[h, w].Size = new Size(CELL_SIZE, CELL_SIZE);
+            //    _pic[h, w].Parent = form;
+
+            //    SetMouseEvent(_pic[h, w], h, w);
+            //});
+            this.BoardOffsetX = offsetX;
+            this.BoardOffsetY = offsetY;
+            this.MainForm = form;
+
+            CreateBoardVisual(width, height, numMines);
+        }
+
+        private void CreateBoardVisual(int width, int height, int numMines) {
             _boardLogic = new BoardLogic(width, height, numMines);
+            //_pic = null;
             _pic = new PictureBox[_boardLogic.Height, _boardLogic.Width];
             isPlaying = false;
 
@@ -27,12 +53,15 @@ namespace MineSweeper {
             _boardLogic.ForEachCell((h, w) => {
                 _pic[h, w] = new PictureBox();
                 _pic[h, w].Image = Properties.Resources.covered;
-                _pic[h, w].Location = new Point(w * CELL_SIZE + locX, h * CELL_SIZE + locY);
+                _pic[h, w].Location = new Point(w * CELL_SIZE + BoardOffsetX, h * CELL_SIZE + BoardOffsetY);
                 _pic[h, w].Size = new Size(CELL_SIZE, CELL_SIZE);
-                _pic[h, w].Parent = form;
+                _pic[h, w].Parent = this.MainForm;
 
                 SetMouseEvent(_pic[h, w], h, w);
             });
+
+            RedrawForm();
+            //MainFor
         }
 
         //設定滑鼠事件
@@ -61,7 +90,7 @@ namespace MineSweeper {
                 //打開第一顆方塊時啟動Timer
                 if (!isPlaying) {
                     isPlaying = true;
-                    timerPlaying.Enabled = true;
+                    TimerPlaying.Enabled = true;
                 }
             };
 
@@ -132,13 +161,13 @@ namespace MineSweeper {
             });
 
             //更新Counter
-            lblRemaining.Text = _boardLogic.RemainingFlagCount.ToString();
+            //LabelRemaining.Text = _boardLogic.RemainingFlagCount.ToString();
         }
 
         //踩到地雷，參數 = 座標
         private void Exploded(int explodedX, int explodedY) {
             isPlaying = false;
-            timerPlaying.Enabled = false;
+            TimerPlaying.Enabled = false;
 
             _boardLogic.ForEachCell((h, w) => {
                 //標示地雷
@@ -173,16 +202,17 @@ namespace MineSweeper {
         //玩家勝利
         private void Winning() {
             isPlaying = false;
-            timerPlaying.Enabled = false;
+            TimerPlaying.Enabled = false;
             _boardLogic.ForEachCell((h, w) => { _pic[h, w].Enabled = false; });
             MessageBox.Show("You Win!");
         }
 
         //重置遊戲
         public void ResetGame(int width, int height, int numMines) {
-            _boardLogic.CreateBoard(width, height, numMines);
-            RedrawForm();
+            //_boardLogic.CreateBoardLogic(width, height, numMines);
+            CreateBoardVisual(width, height, numMines);
             _boardLogic.ForEachCell((h, w) => { _pic[h, w].Enabled = true; });
+            //RedrawForm();
         }
     }
 }

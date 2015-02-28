@@ -39,7 +39,7 @@ namespace MineSweeper {
             //    this.NumMines = numMines;
             //}
 
-            CreateBoard(width, height, numMines);
+            CreateBoardLogic(width, height, numMines);
             //this.Mines = SetMines();
             //this.IsOpened = new bool[height, width];
             //this.IsFlagged = new bool[height, width];
@@ -47,7 +47,7 @@ namespace MineSweeper {
         }
 
         //建立盤面
-        public void CreateBoard(int width, int height, int numMines) {
+        public void CreateBoardLogic(int width, int height, int numMines) {
             this.Width = width;
             this.Height = height;
             this.IsExploded = false;
