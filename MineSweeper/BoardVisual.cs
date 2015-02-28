@@ -7,14 +7,21 @@ using System.Windows.Forms;
 using System.Drawing;
 
 namespace MineSweeper {
-    class BoardVisual : UserControl {
-        private const int CELL_SIZE = 30;       //方塊大小，配合圖片大小所以不能亂改
+    class BoardVisual {
+        private const int CELL_SIZE = 30;       //方塊大小，配合圖片大小所以不可亂改
         private BoardLogic _boardLogic;
         private PictureBox[,] _pic;
+
+        public Label lblRemaining;          //標記剩餘地雷數
+        public Label lblTimer;              //標記時間
+        public Timer timerPlaying;          //計時
+
+        public bool isPlaying { get; private set; }         //遊戲是否在進行中
 
         public BoardVisual(int width, int height, int numMines, int locX, int locY, Form form) {
             _boardLogic = new BoardLogic(width, height, numMines);
             _pic = new PictureBox[_boardLogic.Height, _boardLogic.Width];
+            isPlaying = false;
 
             //設定所有方塊屬性
             _boardLogic.ForEachCell((h, w) => {
@@ -44,10 +51,14 @@ namespace MineSweeper {
                     _boardLogic.SwitchFlag(h, w);   //切換旗號
                 }
 
-                RedrawEachCell();   //重繪盤面
-
-                if (_boardLogic.CheckForWinning()) {    //檢查玩家是否勝利
-                    Winning();
+                //重繪盤面
+                RedrawForm();
+                //檢查玩家是否勝利
+                if (_boardLogic.CheckForWinning()) { Winning(); }
+                //打開第一顆方塊時啟動Timer
+                if (!isPlaying) {
+                    isPlaying = true;
+                    timerPlaying.Enabled = true;
                 }
             };
 
@@ -79,7 +90,7 @@ namespace MineSweeper {
         }
 
         //重繪盤面
-        private void RedrawEachCell() {
+        private void RedrawForm() {
             _boardLogic.ForEachCell((h, w) => {
                 var newImg = Properties.Resources.covered;
                 bool isMines = _boardLogic.Mines[h, w];
@@ -116,14 +127,21 @@ namespace MineSweeper {
 
                 _pic[h, w].Image = newImg;
             });
+
+            lblRemaining.Text = _boardLogic.RemainingFlagCount.ToString();
         }
 
         //踩到地雷，參數 = 座標
         private void Exploded(int explodedX, int explodedY) {
+            isPlaying = false;
+            timerPlaying.Enabled = false;
+
             _boardLogic.ForEachCell((h, w) => {
-                //標示踩到的地雷
+                //標示地雷
                 if (h == explodedX && w == explodedY) {
                     _pic[h, w].Image = Properties.Resources.mine_exploded;
+                } else if (_boardLogic.Mines[h, w]) {
+                    _pic[h, w].Image = Properties.Resources.mine;
                 }
 
                 //標示插錯的旗子
@@ -150,6 +168,9 @@ namespace MineSweeper {
 
         //玩家勝利
         private void Winning() {
+            isPlaying = false;
+            timerPlaying.Enabled = false;
+
             _boardLogic.ForEachCell((h, w) => {
                 _pic[h, w].Enabled = false;
             });

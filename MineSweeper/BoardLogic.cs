@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace MineSweeper {
-    class BoardLogic {
+    class BoardLogic{
         public bool[,] Mines { get; private set; }          //地雷配置
         public bool[,] IsOpened { get; private set; }       //是否打開
         public bool[,] IsFlagged { get; private set; }      //是否插旗
@@ -15,6 +16,16 @@ namespace MineSweeper {
         public int Height { get; private set; }             //盤面高度
         public int NumMines { get; private set; }           //地雷數量
         public bool IsExploded { get; private set; }        //是否GameOver
+
+        public int RemainingFlagCount {                     //剩下多少旗子可用
+            get {
+                int flagCount = 0;
+                ForEachCell((h, w) => {
+                    if (IsFlagged[h, w]) { flagCount++; }
+                });
+                return NumMines - flagCount;
+            }
+        }
 
         public BoardLogic(int width, int height, int numMines) {
             this.Width = width;
@@ -100,7 +111,12 @@ namespace MineSweeper {
 
         //切換旗子
         public void SwitchFlag(int h, int w) {
-            if (!IsOpened[h, w]) {
+            if (IsOpened[h, w]) { return; }
+
+            bool isNotEnoughToFlag = (RemainingFlagCount == 0 && !IsFlagged[h, w]);
+            if (isNotEnoughToFlag) {
+                MessageBox.Show("You have no flag!");
+            } else {
                 IsFlagged[h, w] = !IsFlagged[h, w];
             }
         }
