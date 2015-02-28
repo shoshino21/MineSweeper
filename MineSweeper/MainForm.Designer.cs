@@ -145,7 +145,6 @@
             this.MainMenuStrip = this.menuMain;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(300, 300);
             this.Name = "MainForm";
             this.Text = "MineSweeper by shoshino21";
             this.menuMain.ResumeLayout(false);

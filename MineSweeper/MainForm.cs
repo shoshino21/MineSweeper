@@ -9,21 +9,23 @@ namespace MineSweeper {
         private BoardVisual _boardVisual;
 
         /*/ 注意地雷數不能比格子數多 /*/
-        int boardWidth = 10;
-        int boardHeight = 10;
+        int boardWidth = 20;
+        int boardHeight = 20;
         int numMines = 1;
 
-        //遊戲盤面座標
-        private const int LOCATION_X = 3;
-        private const int LOCATION_Y = 70;
-
+        public const int CELL_SIZE = 30;        //方塊大小，配合圖片大小所以不可亂改
+        public const int MARGIN_UP = 70;        //盤面和視窗邊緣的間距，沒事別亂改
+        public const int MARGIN_BOTTOM = 50;
+        public const int MARGIN_LEFT = 5;
+        public const int MARGIN_RIGHT = 25;
+        
         private int _playingTime;
         //private bool _isPlaying = false;
 
         public MainForm() {
             InitializeComponent();
-
-            _boardVisual = new BoardVisual(boardWidth, boardHeight, numMines, LOCATION_X, LOCATION_Y, this);
+            
+            _boardVisual = new BoardVisual(boardWidth, boardHeight, numMines, this);
 
             _boardVisual.LabelRemaining = this.lblRemaining;
             _boardVisual.LabelTimer = this.lblTimer;
@@ -34,8 +36,10 @@ namespace MineSweeper {
 
         //遊戲初始化
         private void InitializeGame() {
-            this.Width = BoardVisual.CELL_SIZE * boardWidth + LOCATION_X * 2;
-            this.Height = BoardVisual.CELL_SIZE * boardHeight + LOCATION_Y;
+            this.Width = CELL_SIZE * boardWidth + MARGIN_LEFT + MARGIN_RIGHT;
+            this.Height = CELL_SIZE * boardHeight + MARGIN_UP + MARGIN_BOTTOM;
+            //int newWidth = BoardVisual.CELL_SIZE * boardWidth + LOCATION_X * 2;
+            //int newHeight = BoardVisual.CELL_SIZE * boardHeight + LOCATION_Y;
             //this.Size = new System.Drawing.Size(newWidth, newHeight);
 
             lblRemaining.Text = numMines.ToString();
@@ -69,6 +73,7 @@ namespace MineSweeper {
             _boardVisual.ResetGame(boardWidth, boardHeight, numMines);
             //_boardVisual = new BoardVisual(boardWidth, boardHeight, numMines, LOCATION_X, LOCATION_Y, this);
             InitializeGame();
+            //Application.DoEvents();
         }
 
         private void optionToolStripMenuItem_Click(object sender, EventArgs e) {

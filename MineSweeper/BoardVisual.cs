@@ -11,17 +11,16 @@ namespace MineSweeper {
         private BoardLogic _boardLogic;
         private PictureBox[,] _pic;
 
-        public const int CELL_SIZE = 30;    //方塊大小，配合圖片大小所以不可亂改
-        public Form MainForm { get; set; }
+        public Form TheForm { get; set; }
         public Label LabelRemaining { get; set; }          //標記剩餘地雷數
         public Label LabelTimer { get; set; }              //標記時間
         public Timer TimerPlaying { get; set; }          //計時
 
         public bool isPlaying { get; private set; }         //遊戲是否在進行中
-        public int BoardOffsetX { get; set; }
-        public int BoardOffsetY { get; set; }
+        //public int BoardOffsetX { get; set; }
+        //public int BoardOffsetY { get; set; }
 
-        public BoardVisual(int width, int height, int numMines, int offsetX, int offsetY, Form form) {
+        public BoardVisual(int width, int height, int numMines, Form form) {
             //_boardLogic = new BoardLogic(width, height, numMines);
             //_pic = new PictureBox[_boardLogic.Height, _boardLogic.Width];
             //isPlaying = false;
@@ -36,9 +35,9 @@ namespace MineSweeper {
 
             //    SetMouseEvent(_pic[h, w], h, w);
             //});
-            this.BoardOffsetX = offsetX;
-            this.BoardOffsetY = offsetY;
-            this.MainForm = form;
+            //this.BoardOffsetX = ;
+            //this.BoardOffsetY = offsetY;
+            this.TheForm = form;
 
             CreateBoardVisual(width, height, numMines);
         }
@@ -49,13 +48,17 @@ namespace MineSweeper {
             _pic = new PictureBox[_boardLogic.Height, _boardLogic.Width];
             isPlaying = false;
 
+            //MainForm.Width = BoardVisual.CELL_SIZE * width + BoardOffsetX * 2;
+            //MainForm.Height = BoardVisual.CELL_SIZE * height + BoardOffsetY;
+            //MainForm.Size = new System.Drawing.Size(newWidth, newHeight);
+
             //設定所有方塊屬性
             _boardLogic.ForEachCell((h, w) => {
                 _pic[h, w] = new PictureBox();
                 _pic[h, w].Image = Properties.Resources.covered;
-                _pic[h, w].Location = new Point(w * CELL_SIZE + BoardOffsetX, h * CELL_SIZE + BoardOffsetY);
-                _pic[h, w].Size = new Size(CELL_SIZE, CELL_SIZE);
-                _pic[h, w].Parent = this.MainForm;
+                _pic[h, w].Location = new Point(w * MainForm.CELL_SIZE + MainForm.MARGIN_LEFT, h * MainForm.CELL_SIZE + MainForm.MARGIN_UP);
+                _pic[h, w].Size = new Size(MainForm.CELL_SIZE, MainForm.CELL_SIZE);
+                _pic[h, w].Parent = this.TheForm;
 
                 SetMouseEvent(_pic[h, w], h, w);
             });
@@ -210,6 +213,9 @@ namespace MineSweeper {
         //重置遊戲
         public void ResetGame(int width, int height, int numMines) {
             //_boardLogic.CreateBoardLogic(width, height, numMines);
+            //先把舊盤面隱藏起來避免覆蓋到新盤面圖像
+            _boardLogic.ForEachCell((h, w) => { _pic[h, w].Visible = false; });
+
             CreateBoardVisual(width, height, numMines);
             _boardLogic.ForEachCell((h, w) => { _pic[h, w].Enabled = true; });
             //RedrawForm();
