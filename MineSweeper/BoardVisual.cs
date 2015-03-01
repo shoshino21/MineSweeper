@@ -142,9 +142,10 @@ namespace MineSweeper {
 
             _boardLogic.ForEachCell((h, w) => {
                 //標示地雷
+                bool mineNotFlagged = _boardLogic.Mines[h, w] && !_boardLogic.IsFlagged[h, w];
                 if (h == explodedX && w == explodedY) {
                     _pic[h, w].Image = Properties.Resources.mine_exploded;
-                } else if (_boardLogic.Mines[h, w]) {
+                } else if (mineNotFlagged) {
                     _pic[h, w].Image = Properties.Resources.mine;
                 }
 

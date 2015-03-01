@@ -74,6 +74,10 @@ namespace MineSweeper {
 
         private void optionToolStripMenuItem_Click(object sender, EventArgs e) {
             _optionForm.ShowDialog();
+            //若還沒開始遊戲則直接產生新盤面
+            if (!_boardVisual.IsPlaying) {
+                restartToolStripMenuItem_Click(sender, e);
+            }
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e) {
