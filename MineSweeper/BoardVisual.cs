@@ -10,47 +10,24 @@ namespace MineSweeper {
     class BoardVisual {
         private BoardLogic _boardLogic;
         private PictureBox[,] _pic;
+        private Form _mainForm;
 
-        public Form TheForm { get; set; }
-        public Label LabelRemaining { get; set; }          //標記剩餘地雷數
-        public Label LabelTimer { get; set; }              //標記時間
-        public Timer TimerPlaying { get; set; }          //計時
+        public Label LabelRemaining { get; set; }       //標記剩餘地雷數(旗數)
+        public Label LabelTimer { get; set; }           //標記時間
+        public Timer TimerPlaying { get; set; }         //計時器
 
-        public bool isPlaying { get; private set; }         //遊戲是否在進行中
-        //public int BoardOffsetX { get; set; }
-        //public int BoardOffsetY { get; set; }
+        public bool IsPlaying { get; private set; }     //遊戲是否正在進行
 
         public BoardVisual(int width, int height, int numMines, Form form) {
-            //_boardLogic = new BoardLogic(width, height, numMines);
-            //_pic = new PictureBox[_boardLogic.Height, _boardLogic.Width];
-            //isPlaying = false;
-
-            ////設定所有方塊屬性
-            //_boardLogic.ForEachCell((h, w) => {
-            //    _pic[h, w] = new PictureBox();
-            //    _pic[h, w].Image = Properties.Resources.covered;
-            //    _pic[h, w].Location = new Point(w * CELL_SIZE + locX, h * CELL_SIZE + locY);
-            //    _pic[h, w].Size = new Size(CELL_SIZE, CELL_SIZE);
-            //    _pic[h, w].Parent = form;
-
-            //    SetMouseEvent(_pic[h, w], h, w);
-            //});
-            //this.BoardOffsetX = ;
-            //this.BoardOffsetY = offsetY;
-            this.TheForm = form;
-
+            this._mainForm = form;
             CreateBoardVisual(width, height, numMines);
         }
 
+        //建立盤面
         private void CreateBoardVisual(int width, int height, int numMines) {
             _boardLogic = new BoardLogic(width, height, numMines);
-            //_pic = null;
             _pic = new PictureBox[_boardLogic.Height, _boardLogic.Width];
-            isPlaying = false;
-
-            //MainForm.Width = BoardVisual.CELL_SIZE * width + BoardOffsetX * 2;
-            //MainForm.Height = BoardVisual.CELL_SIZE * height + BoardOffsetY;
-            //MainForm.Size = new System.Drawing.Size(newWidth, newHeight);
+            IsPlaying = false;
 
             //設定所有方塊屬性
             _boardLogic.ForEachCell((h, w) => {
@@ -58,13 +35,10 @@ namespace MineSweeper {
                 _pic[h, w].Image = Properties.Resources.covered;
                 _pic[h, w].Location = new Point(w * MainForm.CELL_SIZE + MainForm.MARGIN_LEFT, h * MainForm.CELL_SIZE + MainForm.MARGIN_UP);
                 _pic[h, w].Size = new Size(MainForm.CELL_SIZE, MainForm.CELL_SIZE);
-                _pic[h, w].Parent = this.TheForm;
+                _pic[h, w].Parent = this._mainForm;
 
                 SetMouseEvent(_pic[h, w], h, w);
             });
-
-            RedrawForm();
-            //MainFor
         }
 
         //設定滑鼠事件
@@ -73,11 +47,8 @@ namespace MineSweeper {
             pic.MouseUp += (o, e) => {
                 if (e.Button == MouseButtons.Left) {
                     _boardLogic.OpenCell(h, w);     //打開方塊
-
-                    if (_boardLogic.IsExploded) {   //踩到地雷
-                        Exploded(h, w);
-                        return;
-                    }
+                    //踩到地雷
+                    if (_boardLogic.IsExploded) { Exploded(h, w); return; }
 
                 } else if (e.Button == MouseButtons.Right) {
                     _boardLogic.SwitchFlag(h, w);   //切換旗號
@@ -86,13 +57,10 @@ namespace MineSweeper {
                 //重繪盤面
                 RedrawForm();
                 //檢查玩家是否勝利
-                if (_boardLogic.CheckForWinning()) {
-                    Winning();
-                    return;
-                }
+                if (_boardLogic.CheckForWinning()) { Winning(); return; }
                 //打開第一顆方塊時啟動Timer
-                if (!isPlaying) {
-                    isPlaying = true;
+                if (!IsPlaying) {
+                    IsPlaying = true;
                     TimerPlaying.Enabled = true;
                 }
             };
@@ -163,13 +131,13 @@ namespace MineSweeper {
                 _pic[h, w].Image = newImg;
             });
 
-            //更新Counter
-            //LabelRemaining.Text = _boardLogic.RemainingFlagCount.ToString();
+            //更新剩餘地雷數(旗數)
+            LabelRemaining.Text = _boardLogic.RemainingFlagCount.ToString();
         }
 
         //踩到地雷，參數 = 座標
         private void Exploded(int explodedX, int explodedY) {
-            isPlaying = false;
+            IsPlaying = false;
             TimerPlaying.Enabled = false;
 
             _boardLogic.ForEachCell((h, w) => {
@@ -204,21 +172,22 @@ namespace MineSweeper {
 
         //玩家勝利
         private void Winning() {
-            isPlaying = false;
+            IsPlaying = false;
             TimerPlaying.Enabled = false;
             _boardLogic.ForEachCell((h, w) => { _pic[h, w].Enabled = false; });
             MessageBox.Show("You Win!");
         }
 
-        //重置遊戲
-        public void ResetGame(int width, int height, int numMines) {
-            //_boardLogic.CreateBoardLogic(width, height, numMines);
-            //先把舊盤面隱藏起來避免覆蓋到新盤面圖像
-            _boardLogic.ForEachCell((h, w) => { _pic[h, w].Visible = false; });
+        //重置盤面
+        public void ResetBoard(int width, int height, int numMines) {
+            //先把舊盤面隱藏起來避免覆蓋掉新盤面，並釋放資源
+            _boardLogic.ForEachCell((h, w) => {
+                _pic[h, w].Visible = false;
+                _pic[h, w].Dispose();
+            });
 
             CreateBoardVisual(width, height, numMines);
             _boardLogic.ForEachCell((h, w) => { _pic[h, w].Enabled = true; });
-            //RedrawForm();
         }
     }
 }

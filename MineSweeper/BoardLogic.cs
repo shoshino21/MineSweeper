@@ -27,27 +27,8 @@ namespace MineSweeper {
             }
         }
 
-        public BoardLogic(int width, int height, int numMines) {
-            //this.Width = width;
-            //this.Height = height;
-            //this.IsExploded = false;
-
-            ////地雷數不可大於總格數
-            //if (numMines > Width * Height) {
-            //    this.NumMines = Width * Height;
-            //} else {
-            //    this.NumMines = numMines;
-            //}
-
-            CreateBoardLogic(width, height, numMines);
-            //this.Mines = SetMines();
-            //this.IsOpened = new bool[height, width];
-            //this.IsFlagged = new bool[height, width];
-            //this.AroundCount = CalcAroundCount();
-        }
-
         //建立盤面
-        public void CreateBoardLogic(int width, int height, int numMines) {
+        public BoardLogic(int width, int height, int numMines) {
             this.Width = width;
             this.Height = height;
             this.IsExploded = false;
@@ -153,10 +134,6 @@ namespace MineSweeper {
             });
             return isWinning;
         }
-
-        //public void ResetBoard(int width, int height, int numMines) {
-        //    CreateBoard(width, height, numMines);
-        //}
 
         #region HelperMethod
         //繞行所有方塊

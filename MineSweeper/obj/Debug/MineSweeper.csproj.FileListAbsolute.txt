@@ -7,3 +7,5 @@ F:\@Documents\!!GoogleCloud\Dropbox\@Coding\!GitHub\MineSweeper\MineSweeper\obj\
 F:\@Documents\!!GoogleCloud\Dropbox\@Coding\!GitHub\MineSweeper\MineSweeper\obj\Debug\MineSweeper.exe
 F:\@Documents\!!GoogleCloud\Dropbox\@Coding\!GitHub\MineSweeper\MineSweeper\obj\Debug\MineSweeper.pdb
 F:\@Documents\!!GoogleCloud\Dropbox\@Coding\!GitHub\MineSweeper\MineSweeper\obj\Debug\MineSweeper.MainForm.resources
+F:\@Documents\!!GoogleCloud\Dropbox\@Coding\!GitHub\MineSweeper\MineSweeper\obj\Debug\MineSweeper.OptionForm.resources
+F:\@Documents\!!GoogleCloud\Dropbox\@Coding\!GitHub\MineSweeper\MineSweeper\obj\Debug\MineSweeper.AboutForm.resources
