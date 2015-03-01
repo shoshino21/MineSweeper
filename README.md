@@ -1,5 +1,5 @@
 # MineSweeper
-<br>純練習，就只是個踩地雷而已 @@
+純練習，就只是個踩地雷而已 @@
 <br>寫法不夠好所以盤面太大的話會lag
 <br>
 <br>BoardLogic.cs : 邏輯相關
